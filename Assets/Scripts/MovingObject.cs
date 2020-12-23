@@ -20,7 +20,7 @@ public abstract class MovingObject : MonoBehaviour  // make class abstract to in
         boxCollider = GetComponent<BoxCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
         // By storing the reciprocal of 'moveTime', you can use efficient multiplication rather than division.
-        inverseMoveTime = 1 / moveTime;
+        inverseMoveTime = 1f / moveTime;
 
     }
 
@@ -36,7 +36,7 @@ public abstract class MovingObject : MonoBehaviour  // make class abstract to in
         boxCollider.enabled = true;
 
         // The space checked by Linecast is open and can be moved to it.
-        if (hit.transform==null)
+        if (hit.transform == null)
         {
             StartCoroutine(SmoothMovement(end));
             return true;    // can move
@@ -75,7 +75,7 @@ public abstract class MovingObject : MonoBehaviour  // make class abstract to in
         T hitComponent = hit.transform.GetComponent<T>();
 
         // The moving obeject is blocked, and collide with an interactable object.
-        if (!canMove && hitComponent == null)
+        if (!canMove && hitComponent != null)
             OnCantMove(hitComponent);
         
     }

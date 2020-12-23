@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MovingObject
 {
@@ -100,7 +101,7 @@ public class Player : MovingObject
     private void Restart()
     {
         // Load the last loaded scene(In this case, load main scene, the only scene)
-        Application.LoadLevel(Application.loadedLevel);
+        SceneManager.GetActiveScene();
     }
 
     // Called when Enemy hits the player

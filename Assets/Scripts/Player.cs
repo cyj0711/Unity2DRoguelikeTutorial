@@ -26,6 +26,8 @@ public class Player : MovingObject
     private Animator animator;
     // Before switching levels and entering the scores back into Game Manager, store the player scores during those levels
     private int food;
+    // location that the player's touch begins
+    private Vector2 touchOrigin = -Vector2.one; // -Vector2.one means location of the ouside of the screen
 
     protected override void Start()
     {
@@ -52,12 +54,53 @@ public class Player : MovingObject
         int horizontal = 0;
         int vertical = 0;
 
+// for pc player
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
+
         horizontal = (int)Input.GetAxisRaw("Horizontal");
         vertical = (int)Input.GetAxisRaw("Vertical");
 
         // Prevents the player from moving diagonally
         if (horizontal != 0)
             vertical = 0;
+
+ // for mobile player
+#else
+        // system detects more than one touches
+        if(Input.touchCount>0)
+        {
+            // This game supports one finger swiping for one direction. so ignore the other touches.
+            Touch myTouch = Input.touches[0];
+
+            // Means begining of the touch
+            if (myTouch.phase == TouchPhase.Began)
+            {
+                touchOrigin = myTouch.position;
+            }
+
+            // Means end of the touch, and touched inside of the screen
+            else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
+            {
+                Vector2 touchEnd = myTouch.position;
+                float x = touchEnd.x - touchOrigin.x;
+                float y = touchEnd.y - touchOrigin.y;
+
+                // Protect from repeating true value
+                touchOrigin.x = -1;
+
+                // Check player's diretion
+                if(Mathf.Abs(x)>Mathf.Abs(y))
+                {
+                    horizontal = x > 0 ? 1 : -1;
+                }
+                else
+                {
+                    vertical = y > 0 ? 1 : -1;
+                }
+            }
+        }
+
+#endif
 
         // Player moves
         if (horizontal != 0 || vertical != 0)

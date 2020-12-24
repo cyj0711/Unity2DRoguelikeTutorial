@@ -12,7 +12,8 @@ public class Enemy : MovingObject
     // Used for enemies move each turns.
     private bool skipMove;
 
-
+    public AudioClip enemyAttack1;
+    public AudioClip enemyAttack2;
 
 
     // Start is called before the first frame update
@@ -70,6 +71,8 @@ public class Enemy : MovingObject
         animator.SetTrigger("enemyAttack");
 
         hitPlayer.LoseFood(playerDamage);
+
+        SoundManager.instance.RandomizeSfx(enemyAttack1, enemyAttack2);
     }
 
 }
